@@ -1,0 +1,4 @@
+grpc:
+  user-server-host: 127.0.0.1
+  user-server-port: 55500
+
