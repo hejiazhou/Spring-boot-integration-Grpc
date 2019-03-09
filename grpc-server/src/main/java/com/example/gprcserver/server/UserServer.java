@@ -14,9 +14,10 @@ import java.util.logging.Logger;
 
 /**
  * @author hejiazhou
+ *  @modify superb
  */
-@Component
-public class UserServer implements ApplicationRunner {
+//@Component
+public class UserServer /*implements ApplicationRunner*/ {
     private static final Logger logger = Logger.getLogger(UserServer.class.getName());
     private Server server;
     @Autowired
@@ -24,13 +25,16 @@ public class UserServer implements ApplicationRunner {
     @Autowired
     private UserServer userServer;
 
-    private void start() throws IOException {
+    private void start() throws Exception {
+        System.out.println(userServer+"===");
         server = ServerBuilder.forPort(ServerParameter.USER_SERVICE_PORT)
                 .addService(userService)
                 .build()
                 .start();
         logger.info("Server started, listening on " + ServerParameter.USER_SERVICE_PORT);
-        Runtime.getRuntime().addShutdownHook(new Thread() {
+        userServer.blockUntilShutdown();
+
+     /*   Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 // Use stderr here since the logger may have been reset by its JVM shutdown hook.
@@ -38,11 +42,12 @@ public class UserServer implements ApplicationRunner {
                 UserServer.this.stop();
                 System.err.println("*** server shut down");
             }
-        });
+        });*/
     }
 
-    private void stop() {
+    private void shutdown() {
         if (server != null) {
+            logger.info("Server stop, listening on " + ServerParameter.USER_SERVICE_PORT);
             server.shutdown();
         }
     }
@@ -56,9 +61,9 @@ public class UserServer implements ApplicationRunner {
         }
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
+    //@Override
+ /*   public void run(ApplicationArguments args) throws Exception {
         userServer.start();
         userServer.blockUntilShutdown();
-    }
+    }*/
 }
